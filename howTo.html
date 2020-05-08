@@ -1,0 +1,51 @@
+<html lang="en">
+<body>
+    <h3>HowTo</h3>
+    <p>
+        This app is targeted at finding the path that has the biggest values of its nodes (cells),
+        that are integers, and displaying the result to user
+    </p>
+
+    <p style='padding-top:10px'>
+        App can be run following a number of user-specified modes:
+    <ul>
+        <li>Brute force</li>
+        <li>Dynamic programming</li>
+    </ul>
+    </p>
+    <p>
+        This modes can be specified in "Approach" section of the app (last dropdown menu if count from top to bottom).
+    <br>
+        The "Brute force" mode or approach is an inefficient way of finding the greatest path because it uses
+        full recursive grid traverse. This approach takes quiet a lot of time even on small grids like in this app and
+        is mainly present in the app for illustratory purposes. It will basically show you, how it goes on to find needed
+        path and is useful as you are able to see all the flaws of the approach (e. g. inefficiency).
+    </p>
+    <p>
+        On the other hand, "Dynamic programming" mode employees a fast-performing approach. Which is based on the self-titled
+        math algorithm which is O(n) space complexity as it creates the same sized grid in memory for its proxy calculations.
+    </p>
+    <p style='padding-top:10px'>
+        User is also able to specify and trigger a few other options:
+        <ul>
+            <li>"Upperbound" - change upper limit of the grid integer values (Click "Ok" to confirm the change)</li>
+            <li>"Lowerbound" - change lower limit of the grid integer values (Click "Ok" to confirm the change)</li>
+            <li>"Grid height" - redraw the grid and change it's number of rows to specified</li>
+            <li>"Grid width" - redraw the grid and change it's number of columns to specified</li>
+            <li>"Path highlighting" - chose how you would like path highlighting (coloring of nodes of the grid while triversing the grid) to occur (faster/slower) or turn it off</li>
+        </ul>
+    </p>
+    <p>
+        There are four buttons on the main window of the app (excluding buttons from header-menu):
+        <ul>
+            <li>"Rerandom grid" - redraws and rerandoms all node values of the grid. It is located in the top of the left section</li>
+            <li>"Go" - starts the program, located at the bottom of the left section together with "Stop" button</li>
+            <li>"Stop" - stops the running program if clicked one time, on second click it erases all coloring from grid and sets all nodes back to the default color</li>
+            <li>"Clear" - located in the middle-button section of the window, under the grid, at the "Result" section, this button is solely responsible for flushing output from the "Result section"</li>
+        </ul>
+    </p>
+    <p>
+        Please note that after the program started running all buttons and dropdown sections except from "Stop" and "Clear" must not be interacted with
+    </p>
+</body>
+</html>

@@ -1,0 +1,2 @@
+Pillow==7.1.2
+tk-html-widgets==0.4.0
