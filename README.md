@@ -2,7 +2,7 @@
 
 ## Python grid traversing GUI app ##
 
-### App is solves issue of finding greatest (max/optimal) path on the grid ###
+### App solves issue of finding greatest (max/optimal) path on the grid ###
 
 
 **Getting started**
