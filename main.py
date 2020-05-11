@@ -16,7 +16,7 @@ def read_file(path):
 
 
 class ValidatorFunctor:
-    def __init__(self, upperbound=None, lowerbound=None, validation_func=int, converion_func=int, throw=True, return_self=True, action=None, action_args=None):
+    def __init__(self, upperbound=None, lowerbound=None, validation_func=int, exception_func=None, converion_func=int, throw=True, return_self=True, action=None, action_args=None):
         self.upperbound         = upperbound
         self.lowerbound         = lowerbound
         self.validation_func    = validation_func
@@ -25,6 +25,7 @@ class ValidatorFunctor:
         self.action             = action
         self.action_args        = action_args
         self.return_self        = return_self
+        self.exception_func     = exception_func
 
 
     def check(self, x):
@@ -45,7 +46,9 @@ class ValidatorFunctor:
 
             return True if not self.return_self else x
         except:
-            if self.throw:
+            if self.exception_func(x):
+                return True if not self.return_self else x
+            elif self.throw:
                 raise
             else:
                 if self.action:
@@ -391,19 +394,21 @@ class ExampleApp(tk.Tk):
         def change_upperbound(value):
             nonlocal t
             nonlocal upperbound
-            t.destroy()
-            upperbound = value
-            t = SimpleTable(base, grid_height, grid_width, lowerbound, upperbound)
-            t.grid(row=1, column=1, padx=(10, 10))
+            if value != '' and value != None:
+                t.destroy()
+                upperbound = value
+                t = SimpleTable(base, grid_height, grid_width, lowerbound, upperbound)
+                t.grid(row=1, column=1, padx=(10, 10))
 
         @self.decorator_task_alive(action=self.message_task_runnig, thread_name=ExampleApp.PATH_DRAWER)
         def change_lowerbound(value):
             nonlocal t
             nonlocal lowerbound
-            t.destroy()
-            lowerbound = value
-            t = SimpleTable(base, grid_height, grid_width, lowerbound, upperbound)
-            t.grid(row=1, column=1, padx=(10, 10))
+            if value != '' and value != None:
+                t.destroy()
+                lowerbound = value
+                t = SimpleTable(base, grid_height, grid_width, lowerbound, upperbound)
+                t.grid(row=1, column=1, padx=(10, 10))
 
         @self.decorator_task_alive(action=self.message_task_runnig, thread_name=ExampleApp.PATH_DRAWER)
         def change_speed(event):
@@ -418,20 +423,22 @@ class ExampleApp(tk.Tk):
         validate_upperbound = ValidatorFunctor(lowerbound=-999, upperbound=999
                                                                 , validation_func=lambda x: int(x) >= lowerbound
                                                                 , converion_func=int
+                                                                , exception_func=lambda x: x == ''
                                                                 , throw=False
                                                                 , return_self=True
                                                                 , action=messagebox.showerror
-                                                                , action_args=("Error", f"Value must be integer between -999 and 999 inclusive;\nUpperbound must be greater/equal lowerbound\n"
+                                                                , action_args=("Error", f"Upperbound value must be integer between -999 and 999 inclusive;\nUpperbound must be greater/equal lowerbound\n"
                                                                 f"Previous upperbound: {upperbound}\nPrevious lowerbound: {lowerbound}")
                                         )
 
         validate_lowerbound = ValidatorFunctor(lowerbound=-999, upperbound=999
                                                         , validation_func=lambda x: int(x) <= upperbound
                                                         , converion_func=int
+                                                        , exception_func=lambda x: x == ''
                                                         , throw=False
                                                         , return_self=True
                                                         , action=messagebox.showerror
-                                                        , action_args=("Error", f"Value must be integer between -999 and 999 inclusive;\nLowerbound must be less/equal upperbound\n"
+                                                        , action_args=("Error", f"Lowerbound value must be integer between -999 and 999 inclusive;\nLowerbound must be less/equal upperbound\n"
                                                         f"Previous upperbound: {upperbound}\nPrevious lowerbound: {lowerbound}")
                                         )
 
@@ -445,36 +452,40 @@ class ExampleApp(tk.Tk):
 
         buttons = tk.Frame(base)
         rerandom_grid_button = tk.Button(buttons, text='Rerandom grid', command=lambda : change_upperbound(upperbound))
-        rerandom_grid_button.grid(row=0, column=0, columnspan=2, padx=(0, 15))
+        rerandom_grid_button.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
-        label1 = tk.Label(buttons, text='Upperbound: ')
-        label1.grid(row=1, column=0)
-        input_frame1 = tk.Frame(buttons)
+        input_frame1 = tk.Frame(buttons, highlightbackground="light grey", highlightthickness=1)
+        label1 = tk.Label(input_frame1, text='Upperbound: ')
         entry1 = tk.Entry(input_frame1, width=20)
-        submit_button1 = tk.Button(input_frame1, text='Ok', command=lambda : change_upperbound(validate_upperbound.check(entry1.get())))
-        entry1.grid(row=0, column=0)
-        submit_button1.grid(row=0, column=1)
+        label1.grid(row=0, column=0)
+        entry1.grid(row=1, column=0, padx=(10, 10))
+        # submit_button1.grid(row=0, column=1)
+
+        label2 = tk.Label(input_frame1, text='Lowerbound: ')
+        label2.grid(row=2, column=0)
+        # input_frame2 = tk.Frame(buttons)
+        entry2 = tk.Entry(input_frame1, width=20)
+        # submit_button2 = tk.Button(input_frame1, text='Ok', command=lambda : change_lowerbound(validate_lowerbound.check(entry2.get())))
+        entry2.grid(row=3, column=0, padx=(10, 10))
+        # submit_button2.grid(row=0, column=1)
+        # input_frame2.grid(row=4, column=0, columnspan=2)
+
+        submit_button1 = tk.Button(input_frame1, text='Ok'.center(26), command=lambda : [change_upperbound(validate_upperbound.check(entry1.get())), change_lowerbound(validate_lowerbound.check(entry2.get()))])
+        # submit_button1.place(in_=input_frame1, x=0, rely=1, anchor=tk.CENTER)
+        submit_button1.grid(row=4, column=0, columnspan=2, pady=(5, 5))
+
         input_frame1.grid(row=2, column=0, columnspan=2)
 
-
-        label2 = tk.Label(buttons, text='Lowerbound: ')
-        label2.grid(row=3, column=0)
-        input_frame2 = tk.Frame(buttons)
-        entry2 = tk.Entry(input_frame2, width=20)
-        submit_button2 = tk.Button(input_frame2, text='Ok', command=lambda : change_lowerbound(validate_lowerbound.check(entry2.get())))
-        entry2.grid(row=0, column=0)
-        submit_button2.grid(row=0, column=1)
-        input_frame2.grid(row=4, column=0, columnspan=2)
-
-        label3 = tk.Label(buttons, text='Grid height: ')
+        label3 = tk.Label(buttons, text='Grid height:')
         dropdown = ttk.Combobox(buttons, value=grid_sizes)
         dropdown.current(0)
         dropdown.bind('<<ComboboxSelected>>', change_grid_height)
         label3.grid(row=5, column=0)
+        # label3.configure(anchor="center")
         dropdown.grid(row=6, column=0, columnspan=2)
 
 
-        label4 = tk.Label(buttons, text='Grid width: ')
+        label4 = tk.Label(buttons, text='Grid width:')
         dropdown2 = ttk.Combobox(buttons, value=grid_sizes)
         dropdown2.current(0)
         dropdown2.bind('<<ComboboxSelected>>', change_grid_width)
