@@ -50,7 +50,7 @@ you will need to type the following:
 then
 
 ```bash
-    pyinstaller --onefile main.py
+    pyinstaller --onefile --windowed main.py
 ```
 
 After that move executable file from the created by pyinstaller `dist` folder somewhere alongside `icons` folder and
