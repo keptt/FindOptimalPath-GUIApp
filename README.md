@@ -17,7 +17,7 @@ If you are on windows, the easiest way to install python is to visit [this link]
 On linux you might want to use terminal installation which, if you are on debian-based destribution, might follow like:
 
 ```bash
-    apt-get install python-tk
+    apt-get install python3 && apt-get install python3-tk
 ```
 
 This command will also handle tkinter as part of the default installation
