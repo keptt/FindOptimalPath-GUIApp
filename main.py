@@ -470,7 +470,13 @@ class ExampleApp(tk.Tk):
         # submit_button2.grid(row=0, column=1)
         # input_frame2.grid(row=4, column=0, columnspan=2)
 
-        submit_button1 = tk.Button(input_frame1, text='Ok'.center(26), command=lambda : [change_upperbound(validate_upperbound.check(entry1.get())), change_lowerbound(validate_lowerbound.check(entry2.get()))])
+        def process_input_frame1(event=None):
+            change_upperbound(validate_upperbound.check(entry1.get()))
+            change_lowerbound(validate_lowerbound.check(entry2.get()))
+
+        submit_button1 = tk.Button(input_frame1, text='Ok'.center(26), command=process_input_frame1)
+        entry1.bind('<Return>', process_input_frame1)
+        entry2.bind('<Return>', process_input_frame1)
         # submit_button1.place(in_=input_frame1, x=0, rely=1, anchor=tk.CENTER)
         submit_button1.grid(row=4, column=0, columnspan=2, pady=(5, 5))
 
@@ -511,7 +517,7 @@ class ExampleApp(tk.Tk):
         start_terminate_btn_frame = tk.Frame(buttons)
 
 
-        def start_pause_resume_thread():
+        def start_pause_resume_thread(event=None):
             if not self.threads.get(ExampleApp.PATH_DRAWER):
                 self.thread_walkt(t, sleep_time=path_highlighting_speed, draw=True if path_highlighting_speed != None else False
                     , on_raise=lambda _ : messagebox.showerror('Error', 'Task is already running.\nYou need to stop it first')
@@ -532,7 +538,7 @@ class ExampleApp(tk.Tk):
                 self.resume_timer()
                 start_button.config(text='Pause')
 
-        def kill_thread():
+        def kill_thread(event=None):
             if not self.threads.get(ExampleApp.PATH_DRAWER):
                 t.highlight_all('white')
                 return
@@ -544,6 +550,8 @@ class ExampleApp(tk.Tk):
 
         start_button = tk.Button(start_terminate_btn_frame, text='Go', command=start_pause_resume_thread, width=10)
         terminate_button = tk.Button(start_terminate_btn_frame, text='Stop', command=kill_thread, width=10)
+        self.bind('<space>', start_pause_resume_thread)
+        self.bind('c', kill_thread)
 
         start_button.grid(row=0, column=0)
         self.start_button = start_button
@@ -579,7 +587,10 @@ class ExampleApp(tk.Tk):
         purpose.pack(fill='both')
 
 
-    def create_howto_window(self, source_html=''):
+    def create_howto_window(self):
+        self._create_howto_window(source_html=read_file(self.PATH_TO_HOWTO_HTML))
+
+    def _create_howto_window(self, source_html=''):
         self.howto_window = tk.Toplevel(self)
         self.html_howto = HTMLLabel(self.howto_window, html=source_html)
         self.html_howto.pack(fill="both", expand=True)
@@ -591,11 +602,13 @@ class ExampleApp(tk.Tk):
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label='Exit', command=self.terminate)
         menubar.add_cascade(label='App', menu=filemenu)
+        self.bind('q', lambda e : self.terminate())
 
         helpmenu = tk.Menu(menubar, tearoff=0)
-        helpmenu.add_command(label='HowTo', command=lambda : self.create_howto_window(source_html=read_file(self.PATH_TO_HOWTO_HTML)))
+        helpmenu.add_command(label='HowTo', command=self.create_howto_window)
         helpmenu.add_command(label='About', command=self.create_about_window)
         menubar.add_cascade(label='Help', menu=helpmenu)
+        self.bind('<F1>', lambda e : self.create_howto_window())
 
         supportmenu = tk.Menu(menubar, tearoff=0)
         supportmenu.add_command(label='Donate', command=lambda : messagebox.showinfo('Donate', 'Just kidding :)'))
