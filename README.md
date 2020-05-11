@@ -36,6 +36,8 @@ after that with the command:
 
 you should be able to successfully run and use the application.
 
+*For app specific functions refer to `howTo.html` or inside the app go to Help->HowTo*
+
 **Creating executable**
 
 If you want to create an executable file to ship this program and/or use it on systems without python installed,
@@ -54,3 +56,4 @@ then
 After that move executable file from the created by pyinstaller `dist` folder somewhere alongside `icons` folder and
 `howTo.html` file so that application will be able to make use of them. It may crash if you don't do this.
 After that you can archivate this bundle and ship this ready-to-run app wherever you want
+
