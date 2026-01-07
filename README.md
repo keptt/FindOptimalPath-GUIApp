@@ -1,5 +1,3 @@
-# IndustriouSlime #
-
 ## Python grid traversing GUI app ##
 
 ### App solves issue of finding greatest (max/optimal) path on the grid ###
